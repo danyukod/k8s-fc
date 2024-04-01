@@ -17,6 +17,15 @@ spec:
       containers:
         - name: hello-go
           image: danilokoda/hello-go:v5.6
+          startupProbe:
+            httpGet:
+              path: /healthz
+              port: 8080
+            periodSeconds: 5
+            failureThreshold: 1
+            timeoutSeconds: 1
+            successThreshold: 1
+            initialDelaySeconds: 1
           livenessProbe:
             httpGet:
               path: /healthz
@@ -25,6 +34,7 @@ spec:
             failureThreshold: 1
             timeoutSeconds: 1
             successThreshold: 1
+            initialDelaySeconds: 1
           readinessProbe:
             httpGet:
               path: /ready
@@ -33,7 +43,7 @@ spec:
             failureThreshold: 1
             timeoutSeconds: 1
             successThreshold: 1
-            initialDelaySeconds: 5
+            initialDelaySeconds: 1
           volumeMounts:
             - mountPath: /go/myfamily
               name: config
