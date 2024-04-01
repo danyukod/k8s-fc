@@ -21,8 +21,8 @@ spec:
             httpGet:
               path: /healthz
               port: 8080
-            periodSeconds: 5
-            failureThreshold: 1
+            periodSeconds: 2
+            failureThreshold: 10
             timeoutSeconds: 1
             successThreshold: 1
             initialDelaySeconds: 1
@@ -34,7 +34,7 @@ spec:
             failureThreshold: 1
             timeoutSeconds: 1
             successThreshold: 1
-            initialDelaySeconds: 1
+#            initialDelaySeconds: 1
           readinessProbe:
             httpGet:
               path: /ready
@@ -43,7 +43,7 @@ spec:
             failureThreshold: 1
             timeoutSeconds: 1
             successThreshold: 1
-            initialDelaySeconds: 1
+#            initialDelaySeconds: 1
           volumeMounts:
             - mountPath: /go/myfamily
               name: config
