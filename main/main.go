@@ -39,14 +39,15 @@ func Secret(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(w, "User: %s, Password: %s\n", user, password)
 }
 
-func Healthz(writer http.ResponseWriter, request *http.Request) {
+func Healthz(w http.ResponseWriter, r *http.Request) {
 	duration := time.Since(startedAt)
-	if duration.Seconds() > 25 {
-		writer.WriteHeader(http.StatusInternalServerError)
-		writer.Write([]byte(fmt.Sprintf("Duration: %v\n", duration)))
+
+	if duration.Seconds() < 10 {
+		w.WriteHeader(500)
+		w.Write([]byte(fmt.Sprintf("Duration: %v", duration.Seconds())))
 	} else {
-		writer.WriteHeader(http.StatusOK)
-		writer.Write([]byte(fmt.Sprintf("OK: %v\n", duration)))
+		w.WriteHeader(200)
+		w.Write([]byte("ok"))
 	}
 }
 

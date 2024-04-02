@@ -36,14 +36,11 @@ rules:
   - apiGroups:
       - ""
     resources:
-      - nodes/metrics
-    verbs:
-      - get
-  - apiGroups:
-      - ""
-    resources:
       - pods
       - nodes
+      - nodes/stats
+      - namespaces
+      - configmaps
     verbs:
       - get
       - list
@@ -133,11 +130,11 @@ spec:
       containers:
         - args:
             - --cert-dir=/tmp
-            - --secure-port=10250
+            - --secure-port=4443
             - --kubelet-preferred-address-types=InternalIP,ExternalIP,Hostname
             - --kubelet-use-node-status-port
-            - --metric-resolution=15s
-          image: registry.k8s.io/metrics-server/metrics-server:v0.7.1
+            - --kubelet-insecure-tls
+          image: k8s.gcr.io/metrics-server/metrics-server:v0.4.1
           imagePullPolicy: IfNotPresent
           livenessProbe:
             failureThreshold: 3
@@ -148,7 +145,7 @@ spec:
             periodSeconds: 10
           name: metrics-server
           ports:
-            - containerPort: 10250
+            - containerPort: 4443
               name: https
               protocol: TCP
           readinessProbe:
@@ -157,22 +154,11 @@ spec:
               path: /readyz
               port: https
               scheme: HTTPS
-            initialDelaySeconds: 20
             periodSeconds: 10
-          resources:
-            requests:
-              cpu: 100m
-              memory: 200Mi
           securityContext:
-            allowPrivilegeEscalation: false
-            capabilities:
-              drop:
-                - ALL
             readOnlyRootFilesystem: true
             runAsNonRoot: true
             runAsUser: 1000
-            seccompProfile:
-              type: RuntimeDefault
           volumeMounts:
             - mountPath: /tmp
               name: tmp-dir

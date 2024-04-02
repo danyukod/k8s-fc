@@ -5,7 +5,7 @@ metadata:
   labels:
     app: hello-go
 spec:
-  replicas: 3
+  replicas: 1
   selector:
     matchLabels:
       app: hello-go
@@ -16,33 +16,40 @@ spec:
     spec:
       containers:
         - name: hello-go
-          image: danilokoda/hello-go:v5.6
+          image: danilokoda/hello-go:v5.7
+          resources:
+            requests:
+              memory: "20Mi"
+              cpu: "0.05"
+            limits:
+              memory: "25Mi"
+              cpu: "0.05"
           startupProbe:
             httpGet:
               path: /healthz
               port: 8080
-            periodSeconds: 2
+            periodSeconds: 10
             failureThreshold: 10
             timeoutSeconds: 1
             successThreshold: 1
-            initialDelaySeconds: 1
-          livenessProbe:
-            httpGet:
-              path: /healthz
-              port: 8080
-            periodSeconds: 5
-            failureThreshold: 1
-            timeoutSeconds: 1
-            successThreshold: 1
+            initialDelaySeconds: 10
+#          livenessProbe:
+#            httpGet:
+#              path: /healthz
+#              port: 8080
+#            periodSeconds: 5
+#            failureThreshold: 1
+#            timeoutSeconds: 1
+#            successThreshold: 1
 #            initialDelaySeconds: 1
-          readinessProbe:
-            httpGet:
-              path: /ready
-              port: 8080
-            periodSeconds: 5
-            failureThreshold: 1
-            timeoutSeconds: 1
-            successThreshold: 1
+#          readinessProbe:
+#            httpGet:
+#              path: /ready
+#              port: 8080
+#            periodSeconds: 5
+#            failureThreshold: 1
+#            timeoutSeconds: 1
+#            successThreshold: 1
 #            initialDelaySeconds: 1
           volumeMounts:
             - mountPath: /go/myfamily
