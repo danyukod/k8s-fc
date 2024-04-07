@@ -54,10 +54,16 @@ spec:
           volumeMounts:
             - mountPath: /go/myfamily
               name: config
+              readOnly: true
+            - mountPath: /go/mydata
+              name: hello-go-volume
           envFrom:
             - secretRef:
                 name: hello-go-secret
       volumes:
+        - name: hello-go-volume
+          persistentVolumeClaim:
+            claimName: hello-go-pvc
         - name: config
           configMap:
             name: configmap-family
