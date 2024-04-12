@@ -23,12 +23,41 @@ rules:
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
 metadata:
-  name: server-read-bind
+  name: server-read
 subjects:
   - kind: ServiceAccount
     name: server
     namespace: default
 roleRef:
-    kind: Role
+  kind: Role
+  name: server-read
+  apiGroup: rbac.authorization.k8s.io
+
+---
+
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: server-read
+rules:
+- apiGroups: [""]
+  resources: ["pods","services"]
+  verbs: ["get","watch","list"]
+- apiGroups: ["apps"]
+  resources: ["deployments"]
+  verbs: ["get","watch","list"]
+
+---
+
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: server-read-bind
+subjects:
+- kind: ServiceAccount
+  name: server
+  namespace: default
+roleRef:
+    kind: ClusterRole
     name: server-read
     apiGroup: rbac.authorization.k8s.io
