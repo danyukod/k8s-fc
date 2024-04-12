@@ -14,6 +14,7 @@ spec:
       labels:
         app: hello-go
     spec:
+      serviceAccountName: server
       containers:
         - name: hello-go
           image: danilokoda/hello-go:v5.7
